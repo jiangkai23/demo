@@ -1,0 +1,47 @@
+server:
+    port: 8082
+
+# 数据源配置
+sharding:
+    jdbc:
+        datasource:
+            dataOne:
+                url: jdbc:mysql://localhost:3306/db01?useSSL=true&useUnicode=true&characterEncoding=utf-8
+                username:
+                password:
+                driver-class-name: com.mysql.jdbc.Driver
+
+            dataTwo:
+                url: jdbc:mysql://localhost:3306/db02?useSSL=true&useUnicode=true&characterEncoding=utf-8
+                username:
+                password:
+                driver-class-name: com.mysql.jdbc.Driver
+    config:
+          sharding:
+              props:
+                  sql.show: true
+              tables:
+                  t_user:  #t_user表
+                  key-generator-column-name: id  #主键
+                  actual-data-nodes: ds${0..1}.t_user${0..1}  #数据节点
+                  database-strategy:  #分库策略
+                      inline:
+                          sharding-column: city_id
+                          algorithm-expression: ds${city_id % 2}
+                  table-strategy:  #分表策略
+                      inline:
+                          shardingColumn: sex
+                          algorithm-expression: t_user${sex % 2}
+              t_address:
+                  key-generator-column-name: id
+                  actual-data-nodes: ds${0..1}.t_address
+                  database-strategy:
+                      inline:
+                          shardingColumn: lit
+                          algorithm-expression: ds${lit % 2}
+
+mybatis:
+    type-aliases-package: com.xiamu.demo.shardingjdbc.entity
+    configuration:
+        map-underscore-to-camel-case: true
+        use-generated-keys: true
