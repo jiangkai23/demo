@@ -13,7 +13,7 @@ public class LinkedDemo {
      * @param node 当前链表
      * @return 反转后链表
      */
-    private static ListNode reserve(ListNode node) {
+    private static ListNode reverse(ListNode node) {
         if (null == node || null == node.next) {
             return node;
         }
@@ -34,14 +34,37 @@ public class LinkedDemo {
      * @param node 当前链表
      * @return 反转后链表
      */
-    private ListNode recursiveReserve(ListNode node) {
+    private ListNode recursiveReverse(ListNode node) {
         if (null == node || null == node.next) {
             return node;
         }
-        ListNode res= recursiveReserve(node.next);
+        ListNode res= recursiveReverse(node.next);
         node.next.next = node;
         node.next = null;
         return res;
+    }
+
+    /**
+     * 两个链表逆序相加逆序存储
+     * 1->2->3,4->5->6 = 5->7->9
+     */
+    private static ListNode addTwoNumbers(ListNode one, ListNode two) {
+        ListNode sumNode = new ListNode(0);
+        ListNode current = sumNode;
+        // 进位
+        int overflow = 0;
+        while (null != one || null != two) {
+            int x = null != one ? one.data : 0;
+            int y = null != two ? two.data : 0;
+            int sum = x + y + overflow;
+            // 获取进位
+            overflow = sum / 10;
+            current.next = new ListNode(sum % 10);
+            current = current.next;
+            if (one != null) { one = one.next; }
+            if (two != null) { two = two.next; }
+        }
+        return sumNode.next;
     }
 
     @Data
