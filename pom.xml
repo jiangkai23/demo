@@ -16,7 +16,9 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <redisson.version>3.8.2</redisson.version>
     </properties>
+
 
     <dependencies>
         <dependency>
@@ -51,11 +53,11 @@
             <version>1.1.9</version>
         </dependency>
         <!--如果通过springboot方式集成, 需要增加如下maven坐标, 且其已经依赖了sharding-jdbc-core-->
-        <dependency>
+        <!--<dependency>
             <groupId>io.shardingjdbc</groupId>
             <artifactId>sharding-jdbc-core-spring-boot-starter</artifactId>
             <version>2.0.3</version>
-        </dependency>
+        </dependency>-->
         <!-- mysql -->
         <dependency>
             <groupId>mysql</groupId>
@@ -63,11 +65,11 @@
             <scope>runtime</scope>
         </dependency>
         <!-- mybatis -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>1.3.2</version>
-        </dependency>
+        </dependency>-->
         <!--zookeeper-->
         <dependency>
             <groupId>org.apache.curator</groupId>
@@ -96,7 +98,22 @@
             <artifactId>zookeeper</artifactId>
             <version>3.4.6</version>
         </dependency>
-
+        <!-- redisson -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>${redisson.version}</version>
+        </dependency>
 
     </dependencies>
 

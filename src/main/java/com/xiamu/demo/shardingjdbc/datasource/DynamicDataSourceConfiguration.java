@@ -1,6 +1,6 @@
 package com.xiamu.demo.shardingjdbc.datasource;
 
-import com.alibaba.druid.pool.DruidDataSourceFactory;
+/*import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.xiamu.demo.shardingjdbc.enums.DataSourceKey;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -17,16 +17,16 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Properties;*/
 
 /**
  * @author XiaMu
  * 动态数据源配置
  */
-@Configuration
+//@Configuration
 public class DynamicDataSourceConfiguration {
 
-    @Resource
+    /*@Resource
     private Environment env;
 
     @Bean(name = "dataOne")
@@ -79,5 +79,5 @@ public class DynamicDataSourceConfiguration {
     @Bean
     public PlatformTransactionManager platformTransactionManager(DynamicDataSource dynamicDataSource) {
         return new DataSourceTransactionManager(dynamicDataSource);
-    }
+    }*/
 }
