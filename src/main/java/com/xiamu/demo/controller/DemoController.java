@@ -1,6 +1,7 @@
 package com.xiamu.demo.controller;
 
-import com.xiamu.demo.redisson.RedissonLocker;
+import com.xiamu.demo.redis.RedisDemo;
+import com.xiamu.demo.redis.RedissonLocker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,12 @@ public class DemoController {
     @Resource
     private RedissonLocker redissonLocker;
 
+    @Resource
+    private RedisDemo redisDemo;
+
     @GetMapping("/test")
     public void test() {
-
+        redissonLocker.lock("lockDemo");
+        redisDemo.test();
     }
 }

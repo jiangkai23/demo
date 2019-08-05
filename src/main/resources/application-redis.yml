@@ -1,0 +1,14 @@
+# redis配置
+spring:
+    redis:
+        host: 127.0.0.1
+        port: 6379
+        password: 123456
+        database: 1
+        timeout: 3000ms
+        redisson:
+            singleServerConfig:
+                address: redis://127.0.0.1:6379
+                password: 123456
+                clientName: redis-dev
+                database: 1

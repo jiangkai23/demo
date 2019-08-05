@@ -1,4 +1,4 @@
-package com.xiamu.demo.redisson;
+package com.xiamu.demo.redis;
 
 import java.util.concurrent.TimeUnit;
 
