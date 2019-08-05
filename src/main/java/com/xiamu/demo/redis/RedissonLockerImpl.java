@@ -38,6 +38,12 @@ public class RedissonLockerImpl implements RedissonLocker {
         lock.lock(leaseTime, unit);
         return lock;
     }
+
+    @Override
+    public boolean tryLock(String lockKey) {
+        RLock lock = redissonClient.getLock(lockKey);
+        return lock.tryLock();
+    }
     
     @Override
     public boolean tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime) {

@@ -25,8 +25,7 @@ public class DemoController {
     private RedisDemo redisDemo;
 
     @GetMapping("/test")
-    public void test() {
-        redissonLocker.lock("lockDemo");
+    public void test() throws InterruptedException {
         redisDemo.test();
     }
 }
