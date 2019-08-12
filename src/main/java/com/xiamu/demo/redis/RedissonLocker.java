@@ -27,6 +27,12 @@ public interface RedissonLocker {
     RLock lock(String lockKey);
 
     /**
+     * 没有返回值的获取锁
+     * @param lockKey 加锁key
+     */
+    void lock2(String lockKey);
+
+    /**
      * 超时加锁返回锁
      * @param lockKey 加锁key
      * @param leaseTime 锁时间

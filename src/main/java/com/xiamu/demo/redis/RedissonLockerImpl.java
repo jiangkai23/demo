@@ -26,6 +26,12 @@ public class RedissonLockerImpl implements RedissonLocker {
     }
 
     @Override
+    public void lock2(String lockKey) {
+        RLock lock = redissonClient.getLock(lockKey);
+        lock.lock();
+    }
+
+    @Override
     public RLock lock(String lockKey, int leaseTime) {
         RLock lock = redissonClient.getLock(lockKey);
         lock.lock(leaseTime, TimeUnit.SECONDS);

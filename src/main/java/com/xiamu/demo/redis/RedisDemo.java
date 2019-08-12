@@ -1,5 +1,6 @@
 package com.xiamu.demo.redis;
 
+import com.xiamu.demo.juc.CustomizeThreadPool;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.springframework.core.io.ClassPathResource;
@@ -43,6 +44,21 @@ public class RedisDemo {
         TimeUnit.SECONDS.sleep(5);
         result = luaUnLock(lockKey, value);
         log.info("释放分布式结果:{}", result);
+        CustomizeThreadPool.threadPool.execute(() -> {
+            redissonLocker.lock2(lockKey);
+            log.info("1111");
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            redissonLocker.unlock(lockKey);
+        });
+
+        CustomizeThreadPool.threadPool.execute(() -> {
+            redissonLocker.lock2(lockKey);
+            log.info("2222");
+        });
     }
 
 
