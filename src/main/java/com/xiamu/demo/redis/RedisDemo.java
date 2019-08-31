@@ -46,18 +46,21 @@ public class RedisDemo {
         log.info("释放分布式结果:{}", result);
         CustomizeThreadPool.threadPool.execute(() -> {
             redissonLocker.lock2(lockKey);
-            log.info("1111");
+            log.info("1111获取锁成功");
             try {
                 TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             redissonLocker.unlock(lockKey);
+            log.info("1111释放锁");
         });
 
         CustomizeThreadPool.threadPool.execute(() -> {
             redissonLocker.lock2(lockKey);
-            log.info("2222");
+            log.info("2222获取锁成功");
+            redissonLocker.unlock(lockKey);
+            log.info("2222释放锁");
         });
     }
 
@@ -65,14 +68,14 @@ public class RedisDemo {
     /**
      * 带有过期时间的setNx实现分布式锁,value保证不会释放锁其他人的锁
      */
-    private boolean lock(String key, String value) {
+    private Boolean lock(String key, String value) {
         return stringRedisTemplate.opsForValue().setIfAbsent(key, value, 10L, TimeUnit.SECONDS);
     }
 
     /**
      * 判断value是否相等之后可能锁过期别其他线程加锁,此时会删除其他人的锁
      */
-    private boolean unLock(String key, String value) {
+    private Boolean unLock(String key, String value) {
         String cacheValue = stringRedisTemplate.opsForValue().get(key);
         if (!value.equals(cacheValue)) {
             return false;
@@ -83,7 +86,7 @@ public class RedisDemo {
     /**
      * 释放分布式锁安全,但是依然存在业务时间过长导致锁过期被其他线程获取的情况,此时需要检测续租锁可使用redisson
      */
-    private boolean luaUnLock(String key, String value) {
+    private Boolean luaUnLock(String key, String value) {
         ScriptSource lua = new ResourceScriptSource(new ClassPathResource("redisUnLock.lua"));
         DefaultRedisScript<Boolean> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptSource(lua);
