@@ -2,6 +2,7 @@ package com.xiamu.demo.controller;
 
 import com.xiamu.demo.redis.RedisDemo;
 import com.xiamu.demo.redis.RedissonLocker;
+import com.xiamu.demo.zookeeper.ZookeeperDemo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +25,12 @@ public class DemoController {
     @Resource
     private RedisDemo redisDemo;
 
+    @Resource
+    private ZookeeperDemo zookeeperDemo;
+
     @GetMapping("/test")
-    public void test() throws InterruptedException {
-        redisDemo.test();
+    public void test() throws Exception {
+//        redisDemo.test();
+        zookeeperDemo.test();
     }
 }

@@ -1,12 +1,13 @@
 package com.xiamu.demo.zookeeper;
 
+import com.xiamu.demo.juc.CustomizeThreadPool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.framework.imps.CuratorFrameworkState;
-import org.apache.curator.retry.ExponentialBackoffRetry;
-import org.apache.zookeeper.data.Stat;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,24 +15,53 @@ import java.util.concurrent.TimeUnit;
  * @date 2019-07-25
  */
 @Slf4j
+@Component
 public class ZookeeperDemo {
-    public static CuratorFramework getClient() {
-        return CuratorFrameworkFactory.builder()
-                .connectString("localhost:2181")
-                .retryPolicy(new ExponentialBackoffRetry(1000, 3))
-                .connectionTimeoutMs(10 * 1000)
-                .sessionTimeoutMs(60 * 1000)
-                .namespace("xiamu")
-                .build();
+
+    @Resource
+    private CuratorFramework zooKeeperClient;
+
+    private String path = "/lock";
+
+    private CountDownLatch countDownLatch = new CountDownLatch(2);
+
+    public void test() {
+        InterProcessMutex lock = new InterProcessMutex(zooKeeperClient, path);
+        this.doSomeThing(lock);
+        this.doSomeThing(lock);
     }
 
-    public static void main(String[] args) throws Exception {
-        String path = "/demo";
-        byte[] data = "demoData".getBytes();
-        CuratorFramework zooKeeperClient = getClient();
-        zooKeeperClient.start();
-        log.info("{}", zooKeeperClient.getState());
-        String s = zooKeeperClient.create().forPath(path, data);
-        log.info("{}", s);
+    private void doSomeThing(InterProcessMutex lock) {
+        CustomizeThreadPool.threadPool.execute(() -> {
+            try {
+                countDownLatch.await();
+                this.getLock(lock);
+                TimeUnit.SECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            this.releaseLock(lock);
+        });
+        countDownLatch.countDown();
+    }
+
+    private void getLock(InterProcessMutex lock) {
+        try {
+            lock.acquire();
+            log.info("{}获取锁成功", Thread.currentThread().getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void releaseLock(InterProcessMutex lock) {
+        if (null != lock && lock.isAcquiredInThisProcess()) {
+            try {
+                lock.release();
+                log.info("{}释放锁成功", Thread.currentThread().getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

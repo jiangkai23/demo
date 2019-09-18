@@ -3,4 +3,4 @@ server:
 
 spring:
     profiles:
-        active: redis-cluster
+        active: redis-single
