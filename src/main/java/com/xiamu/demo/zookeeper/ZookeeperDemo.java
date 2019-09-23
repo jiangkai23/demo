@@ -19,49 +19,30 @@ import java.util.concurrent.TimeUnit;
 public class ZookeeperDemo {
 
     @Resource
-    private CuratorFramework zooKeeperClient;
+    private ZooKeeperLock zooKeeperLock;
 
     private String path = "/lock";
 
     private CountDownLatch countDownLatch = new CountDownLatch(2);
 
     public void test() {
-        InterProcessMutex lock = new InterProcessMutex(zooKeeperClient, path);
-        this.doSomeThing(lock);
-        this.doSomeThing(lock);
+        InterProcessMutex curatorLock = zooKeeperLock.getCuratorLock(path);
+        this.doSomeThing(curatorLock);
+        this.doSomeThing(curatorLock);
     }
 
     private void doSomeThing(InterProcessMutex lock) {
         CustomizeThreadPool.threadPool.execute(() -> {
             try {
                 countDownLatch.await();
-                this.getLock(lock);
+                zooKeeperLock.curatorLock(lock);
                 TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            this.releaseLock(lock);
+            zooKeeperLock.curatorReleaseLock(lock);
         });
         countDownLatch.countDown();
     }
 
-    private void getLock(InterProcessMutex lock) {
-        try {
-            lock.acquire();
-            log.info("{}获取锁成功", Thread.currentThread().getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void releaseLock(InterProcessMutex lock) {
-        if (null != lock && lock.isAcquiredInThisProcess()) {
-            try {
-                lock.release();
-                log.info("{}释放锁成功", Thread.currentThread().getName());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

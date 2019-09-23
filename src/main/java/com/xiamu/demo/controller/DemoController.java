@@ -30,7 +30,7 @@ public class DemoController {
 
     @GetMapping("/test")
     public void test() throws Exception {
-        redisDemo.test();
-//        zookeeperDemo.test();
+//        redisDemo.test();
+        zookeeperDemo.test();
     }
 }
