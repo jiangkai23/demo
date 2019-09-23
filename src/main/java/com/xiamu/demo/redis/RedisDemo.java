@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,36 +34,56 @@ public class RedisDemo {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    public void test() throws InterruptedException {
+
+    public void test() {
+        CountDownLatch count = new CountDownLatch(2);
         String lockKey = "LOCK_KEY";
-        String value = UUID.randomUUID().toString();
-        boolean result = lock(lockKey, value);
-        boolean result1 = lock(lockKey, UUID.randomUUID().toString());
-        log.info("获取分布式结果:{}", result);
-        log.info("获取分布式结果:{}", result1);
-        // doSomeThing()
-        TimeUnit.SECONDS.sleep(5);
-        result = luaUnLock(lockKey, value);
-        log.info("释放分布式结果:{}", result);
         CustomizeThreadPool.threadPool.execute(() -> {
-            redissonLocker.lock2(lockKey);
-            log.info("1111获取锁成功");
             try {
-                TimeUnit.SECONDS.sleep(3);
+                count.await();
+                redissonLocker.lock2(lockKey);
+                log.info(Thread.currentThread().getId() + "获取锁");
+                TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            } finally {
+                redissonLocker.unlock(lockKey);
+                log.info("线程1释放锁");
             }
-            redissonLocker.unlock(lockKey);
-            log.info("1111释放锁");
         });
+        count.countDown();
+        CustomizeThreadPool.threadPool.execute(() -> {
+            try {
+                count.await();
+                TimeUnit.SECONDS.sleep(2);
+                redissonLocker.lock2(lockKey);
+                log.info(Thread.currentThread().getId() + "获取锁");
+                TimeUnit.SECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                redissonLocker.unlock(lockKey);
+                log.info("线程2释放锁");
+            }
+        });
+        count.countDown();
+    }
 
+    public void test2() {
+        String lockKey = "LOCK_KEY";
         CustomizeThreadPool.threadPool.execute(() -> {
             redissonLocker.lock2(lockKey);
-            log.info("2222获取锁成功");
-            redissonLocker.unlock(lockKey);
-            log.info("2222释放锁");
+            redissonLocker.lock2(lockKey);
+            try {
+                TimeUnit.SECONDS.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                redissonLocker.unlock(lockKey);
+            }
         });
     }
+
 
 
     /**
