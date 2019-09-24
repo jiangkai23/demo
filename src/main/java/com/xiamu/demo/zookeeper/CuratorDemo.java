@@ -2,13 +2,13 @@ package com.xiamu.demo.zookeeper;
 
 import com.xiamu.demo.juc.CustomizeThreadPool;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 
 /**
  * @author XiaMu
@@ -16,31 +16,40 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class ZookeeperDemo {
+public class CuratorDemo {
+
+    @Resource
+    private CuratorLock curatorLock;
 
     @Resource
     private ZooKeeperLock zooKeeperLock;
 
-    private String path = "/lock";
-
     private CountDownLatch countDownLatch = new CountDownLatch(2);
 
     public void test() {
-        InterProcessMutex curatorLock = zooKeeperLock.getCuratorLock(path);
-        this.doSomeThing(curatorLock);
-        this.doSomeThing(curatorLock);
+        String path = "/lock";
+        InterProcessMutex lock = curatorLock.getCuratorLock(path);
+        this.doSomeThing(lock);
+        this.doSomeThing(lock);
+    }
+
+    public void test2() throws Exception {
+        String path = "/xiamu/lock";
+        String a = zooKeeperLock.createTemporaryNode(path + "/lock-key", "a");
+        System.out.println(a);
+        zooKeeperLock.registerWatch(path);
     }
 
     private void doSomeThing(InterProcessMutex lock) {
         CustomizeThreadPool.threadPool.execute(() -> {
             try {
                 countDownLatch.await();
-                zooKeeperLock.curatorLock(lock);
+                curatorLock.curatorLock(lock);
                 TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            zooKeeperLock.curatorReleaseLock(lock);
+            curatorLock.curatorReleaseLock(lock);
         });
         countDownLatch.countDown();
     }

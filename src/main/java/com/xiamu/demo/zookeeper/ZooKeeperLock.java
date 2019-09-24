@@ -1,14 +1,15 @@
 package com.xiamu.demo.zookeeper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.api.CreateBuilder;
-import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.ZooKeeper;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @author XiaMu
@@ -19,49 +20,43 @@ import java.nio.file.Path;
 public class ZooKeeperLock {
 
     @Resource
-    private CuratorFramework zooKeeperClient;
+    private ZooKeeper zooKeeperClient;
 
 
     /**
-     * curator获取锁
+     * 创建一个path路径
      */
-    public InterProcessMutex getCuratorLock(String path) {
-        return new InterProcessMutex(zooKeeperClient, path);
+    public String createPath(String path) throws Exception {
+        return zooKeeperClient.create(path, new byte[0], new ArrayList<>(), CreateMode.PERSISTENT);
     }
 
     /**
-     * curator方式加锁
-     * @param lock 锁
+     * 创建一个临时顺序节点
+     * @param path 路径(会加上顺序)
+     * @param data 数据
      */
-    public void curatorLock(InterProcessMutex lock) {
-        try {
-            lock.acquire();
-            log.info("{}获取锁成功", Thread.currentThread().getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public String createTemporaryNode(String path, String data) throws Exception {
+        return zooKeeperClient.create(path, data.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
     /**
-     * curator方式释放锁
-     * @param lock 锁
+     * 删除一个节点
      */
-    public void curatorReleaseLock(InterProcessMutex lock) {
-        if (null != lock && lock.isAcquiredInThisProcess()) {
-            try {
-                lock.release();
-                log.info("{}释放锁成功", Thread.currentThread().getName());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    public void deleteNode(String path) throws Exception {
+        zooKeeperClient.delete(path, -1);
     }
 
-    public void createPath() throws Exception {
-        String path = zooKeeperClient.create().forPath("path");
+    /**
+     * 注册一个监听器
+     */
+    public void registerWatch(String path) throws Exception {
+        List<String> children1 = zooKeeperClient.getChildren(path, event -> {
+            System.out.println("监听");
+        }, null);
+        System.out.println(children1.toString());
+        byte[] data1 = zooKeeperClient.getData(path, true, null);
+        List<String> children = zooKeeperClient.getChildren(path, true);
+        System.out.println(children.toString());
     }
 
-    public void createTemporaryNode(String path) throws Exception {
-        String s = zooKeeperClient.create().withMode(CreateMode.EPHEMERAL).forPath(path);
-    }
 }
