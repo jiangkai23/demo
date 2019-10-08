@@ -2,11 +2,18 @@ package com.xiamu.demo.datastructure;
 
 import lombok.Data;
 
+
 /**
  * @author XiaMu
  * 链表demo
  */
 public class LinkedDemo {
+
+    // 单链表反转
+    //todo 链表中环的检测
+    //todo 两个有序的链表合并
+    //todo 删除链表倒数第n个结点
+    //todo 求链表的中间结点
 
     /**
      * 链表反转解法一

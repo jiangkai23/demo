@@ -6,6 +6,7 @@ import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -34,10 +35,9 @@ public class CuratorDemo {
     }
 
     public void test2() throws Exception {
-        String path = "/xiamu/lock";
-        String a = zooKeeperLock.createTemporaryNode(path + "/lock-key", "a");
-        System.out.println(a);
-        zooKeeperLock.registerWatch(path);
+        String path = "/xiamu/lock/lock-key";
+        doSomeThing2(path);
+        doSomeThing2(path);
     }
 
     private void doSomeThing(InterProcessMutex lock) {
@@ -50,6 +50,26 @@ public class CuratorDemo {
                 e.printStackTrace();
             }
             curatorLock.curatorReleaseLock(lock);
+        });
+        countDownLatch.countDown();
+    }
+
+    private void doSomeThing2(String path) {
+        CustomizeThreadPool.threadPool.execute(() -> {
+            try {
+                countDownLatch.await();
+                zooKeeperLock.lock(path);
+                TimeUnit.SECONDS.sleep(2);
+                zooKeeperLock.setData(path, "aa");
+                TimeUnit.SECONDS.sleep(2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                zooKeeperLock.deleteNode(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
         countDownLatch.countDown();
     }

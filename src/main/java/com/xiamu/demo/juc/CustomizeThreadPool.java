@@ -13,6 +13,6 @@ public class CustomizeThreadPool {
     private static UserThreadFactory factory = new UserThreadFactory("demoThread");
 
     public static ThreadPoolExecutor threadPool =
-            new ThreadPoolExecutor(5, 20, 0L, TimeUnit.MILLISECONDS,
+            new ThreadPoolExecutor(10, 20, 0L, TimeUnit.MILLISECONDS,
                     new LinkedBlockingQueue<>(50), factory, new ThreadPoolExecutor.AbortPolicy());
 }
