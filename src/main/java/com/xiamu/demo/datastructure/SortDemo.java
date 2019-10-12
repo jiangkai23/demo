@@ -185,7 +185,7 @@ public class SortDemo {
 
 
     public static void main(String[] args) {
-        int a[] = {3, 1, 7, 6, 6};
+        int[] a = {3, 1, 7, 6, 6};
         chooseSort(a, 5);
         System.out.println(Arrays.toString(a));
     }
