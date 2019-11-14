@@ -1,4 +1,4 @@
-package com.xiamu.demo.juc;
+package com.xiamu.demo.juc.singleton;
 
 /**
  * @author XiaMu

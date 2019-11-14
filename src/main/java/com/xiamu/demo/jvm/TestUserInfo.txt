@@ -1,0 +1,88 @@
+Classfile /Users/mc/Documents/workspace/demo/src/main/java/com/xiamu/demo/jvm/TestUser.class
+  Last modified 2019-10-15; size 642 bytes
+  MD5 checksum 8c9b406caf87d5336043f3b8fc57095f
+  Compiled from "TestUser.java"
+public class com.xiamu.demo.jvm.TestUser
+  minor version: 0
+  major version: 52
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = Methodref          #7.#25         // java/lang/Object."<init>":()V
+   #2 = Class              #26            // com/xiamu/demo/jvm/User
+   #3 = Methodref          #2.#25         // com/xiamu/demo/jvm/User."<init>":()V
+   #4 = Methodref          #2.#27         // com/xiamu/demo/jvm/User.setAge:(I)V
+   #5 = Methodref          #2.#28         // com/xiamu/demo/jvm/User.setName:(Ljava/lang/String;)V
+   #6 = Class              #29            // com/xiamu/demo/jvm/TestUser
+   #7 = Class              #30            // java/lang/Object
+   #8 = Utf8               <init>
+   #9 = Utf8               ()V
+  #10 = Utf8               Code
+  #11 = Utf8               LineNumberTable
+  #12 = Utf8               LocalVariableTable
+  #13 = Utf8               this
+  #14 = Utf8               Lcom/xiamu/demo/jvm/TestUser;
+  #15 = Utf8               initUser
+  #16 = Utf8               (ILjava/lang/String;)Lcom/xiamu/demo/jvm/User;
+  #17 = Utf8               age
+  #18 = Utf8               I
+  #19 = Utf8               name
+  #20 = Utf8               Ljava/lang/String;
+  #21 = Utf8               user
+  #22 = Utf8               Lcom/xiamu/demo/jvm/User;
+  #23 = Utf8               SourceFile
+  #24 = Utf8               TestUser.java
+  #25 = NameAndType        #8:#9          // "<init>":()V
+  #26 = Utf8               com/xiamu/demo/jvm/User
+  #27 = NameAndType        #31:#32        // setAge:(I)V
+  #28 = NameAndType        #33:#34        // setName:(Ljava/lang/String;)V
+  #29 = Utf8               com/xiamu/demo/jvm/TestUser
+  #30 = Utf8               java/lang/Object
+  #31 = Utf8               setAge
+  #32 = Utf8               (I)V
+  #33 = Utf8               setName
+  #34 = Utf8               (Ljava/lang/String;)V
+{
+  public com.xiamu.demo.jvm.TestUser();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 7: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lcom/xiamu/demo/jvm/TestUser;
+
+  public com.xiamu.demo.jvm.User initUser(int, java.lang.String);
+    descriptor: (ILjava/lang/String;)Lcom/xiamu/demo/jvm/User;
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=4, args_size=3
+         0: new           #2                  // class com/xiamu/demo/jvm/User
+         3: dup
+         4: invokespecial #3                  // Method com/xiamu/demo/jvm/User."<init>":()V
+         7: astore_3
+         8: aload_3
+         9: iload_1
+        10: invokevirtual #4                  // Method com/xiamu/demo/jvm/User.setAge:(I)V
+        13: aload_3
+        14: aload_2
+        15: invokevirtual #5                  // Method com/xiamu/demo/jvm/User.setName:(Ljava/lang/String;)V
+        18: aload_3
+        19: areturn
+      LineNumberTable:
+        line 10: 0
+        line 11: 8
+        line 12: 13
+        line 13: 18
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      20     0  this   Lcom/xiamu/demo/jvm/TestUser;
+            0      20     1   age   I
+            0      20     2  name   Ljava/lang/String;
+            8      12     3  user   Lcom/xiamu/demo/jvm/User;
+}
+SourceFile: "TestUser.java"
