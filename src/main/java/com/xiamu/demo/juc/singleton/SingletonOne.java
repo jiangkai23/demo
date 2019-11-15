@@ -1,6 +1,6 @@
 package com.xiamu.demo.juc.singleton;
 
-import com.xiamu.demo.juc.CustomizeThreadPool;
+import com.xiamu.demo.juc.threadpool.CustomizeThreadPool;
 
 import java.util.concurrent.ThreadPoolExecutor;
 

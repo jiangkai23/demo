@@ -1,4 +1,4 @@
-package com.xiamu.demo.juc;
+package com.xiamu.demo.juc.threadpool;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

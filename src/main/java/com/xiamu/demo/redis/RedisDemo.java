@@ -1,8 +1,7 @@
 package com.xiamu.demo.redis;
 
-import com.xiamu.demo.juc.CustomizeThreadPool;
+import com.xiamu.demo.juc.threadpool.CustomizeThreadPool;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Collections;
-import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 

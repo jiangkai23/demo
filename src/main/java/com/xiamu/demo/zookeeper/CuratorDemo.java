@@ -1,15 +1,13 @@
 package com.xiamu.demo.zookeeper;
 
-import com.xiamu.demo.juc.CustomizeThreadPool;
+import com.xiamu.demo.juc.threadpool.CustomizeThreadPool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 
 /**
  * @author XiaMu

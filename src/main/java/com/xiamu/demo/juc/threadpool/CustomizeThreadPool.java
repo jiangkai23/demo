@@ -1,4 +1,4 @@
-package com.xiamu.demo.juc;
+package com.xiamu.demo.juc.threadpool;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
