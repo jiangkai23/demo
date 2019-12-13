@@ -2,6 +2,7 @@ package com.xiamu.demo.redis;
 
 import com.xiamu.demo.juc.threadpool.CustomizeThreadPool;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBloomFilter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -80,6 +81,17 @@ public class RedisDemo {
                 redissonLocker.unlock(lockKey);
             }
         });
+    }
+
+    public void testBloomFilter() {
+        RBloomFilter<String> myBloomFilter = redissonLocker.getBloomFilter("myBloomFilter");
+        myBloomFilter.tryInit(100, 0.01);
+        myBloomFilter.add("www.baidu.com");
+        System.out.println(myBloomFilter.contains("www.baidu.com"));
+        System.out.println(myBloomFilter.contains("www.google.com"));
+    }
+
+    public void testRateLimter() {
     }
 
 

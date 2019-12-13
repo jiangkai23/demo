@@ -2,7 +2,10 @@ package com.xiamu.demo.redis;
 
 import java.util.concurrent.TimeUnit;
 
+import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
+import org.redisson.api.RRateLimiter;
+import org.redisson.api.RateIntervalUnit;
 
 /**
  * @author XiaMu
@@ -77,4 +80,38 @@ public interface RedissonLocker {
      * @param lock 锁
      */
     void unlock(RLock lock);
+
+    /**
+     * 创建并获取布隆过滤器
+     * @param name 名字
+     * @param capacity 容量
+     * @param errorRate 错误率
+     * @return 布隆过滤器
+     */
+    RBloomFilter<String> createBloomFilter(String name, long capacity, double errorRate);
+
+    /**
+     * 获取布隆过滤器
+     * @param name 名字
+     * @return 布隆过滤器
+     */
+    RBloomFilter<String> getBloomFilter(String name);
+
+    /**
+     * 初始化并获取限流组件
+     * @param name 组件名字
+     * @param rate 速率
+     * @param rateInterval 速率间隔
+     * @param rateIntervalUnit 速率间隔单位
+     * @return 限流组件
+     */
+    RRateLimiter createRateLimiter(String name, long rate, long rateInterval, RateIntervalUnit rateIntervalUnit);
+
+    /**
+     * 获取限流组件
+     * @param name 组件名字
+     * @return 限流组件
+     */
+    RRateLimiter getRateLimiter(String name);
+
 }

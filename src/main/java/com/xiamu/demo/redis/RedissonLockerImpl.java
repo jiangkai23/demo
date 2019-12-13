@@ -1,8 +1,6 @@
 package com.xiamu.demo.redis;
 
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.redisson.api.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -72,4 +70,27 @@ public class RedissonLockerImpl implements RedissonLocker {
         lock.unlock();
     }
 
+    @Override
+    public RBloomFilter<String> createBloomFilter(String name, long capacity, double errorRate) {
+        RBloomFilter<String> bloomFilter = redissonClient.getBloomFilter(name);
+        bloomFilter.tryInit(capacity, errorRate);
+        return bloomFilter;
+    }
+
+    @Override
+    public RBloomFilter<String> getBloomFilter(String name) {
+        return redissonClient.getBloomFilter(name);
+    }
+
+    @Override
+    public RRateLimiter createRateLimiter(String name, long rate, long rateInterval, RateIntervalUnit rateIntervalUnit) {
+        RRateLimiter rateLimiter = redissonClient.getRateLimiter(name);
+        rateLimiter.trySetRate(RateType.OVERALL, rate, rateInterval, rateIntervalUnit);
+        return rateLimiter;
+    }
+
+    @Override
+    public RRateLimiter getRateLimiter(String name) {
+        return redissonClient.getRateLimiter(name);
+    }
 }

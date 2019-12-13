@@ -31,6 +31,7 @@ public class DemoController {
     @GetMapping("/test")
     public void test() throws Exception {
 //        redisDemo.test();
-        curatorDemo.test2();
+        redisDemo.testBloomFilter();
+//        curatorDemo.test2();
     }
 }
