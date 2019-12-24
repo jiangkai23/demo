@@ -1,27 +1,28 @@
-package com.xiamu.demo.netty;
+package com.xiamu.demo.nio;
+
+import com.xiamu.demo.juc.threadpool.CustomizeThreadPool;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author XiaMu
  */
 public class IoServer {
     public static void main(String[] args) throws Exception {
-
+        ThreadPoolExecutor threadPool = CustomizeThreadPool.threadPool;
         ServerSocket serverSocket = new ServerSocket(8080);
-
         // (1) 接收新连接线程
-        new Thread(() -> {
+        threadPool.execute(() -> {
             while (true) {
                 try {
                     // (1) 阻塞方法获取新的连接
                     Socket socket = serverSocket.accept();
-
                     // (2) 每一个新的连接都创建一个线程，负责读取数据
-                    new Thread(() -> {
+                    threadPool.execute(() -> {
                         try {
                             byte[] data = new byte[1024];
                             InputStream inputStream = socket.getInputStream();
@@ -33,13 +34,13 @@ public class IoServer {
                                 }
                             }
                         } catch (IOException e) {
+                            System.out.println("读取数据失败");
                         }
-                    }).start();
-
+                    });
                 } catch (IOException e) {
+                    System.out.println("连接失败");
                 }
-
             }
-        }).start();
+        });
     }
 }
