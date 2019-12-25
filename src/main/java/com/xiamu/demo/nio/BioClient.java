@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * @author XiaMu
  */
-public class IoClient {
+public class BioClient {
 
     public static void main(String[] args) {
         ThreadPoolExecutor threadPool = CustomizeThreadPool.threadPool;

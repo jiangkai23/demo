@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * @author XiaMu
  */
-public class IoServer {
+public class BioServer {
     public static void main(String[] args) throws Exception {
         ThreadPoolExecutor threadPool = CustomizeThreadPool.threadPool;
         ServerSocket serverSocket = new ServerSocket(8080);
