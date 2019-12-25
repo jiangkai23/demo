@@ -4,12 +4,13 @@ package com.xiamu.demo.jvm;
  * @author XiaMu
  * @date 2019-10-15
  */
-public class User {
+public class User extends FatherUser{
 
     private String name;
 
     private int age;
 
+    public User() {}
     public User(int age, String name) {
         this.name = name;
         this.age = age;
