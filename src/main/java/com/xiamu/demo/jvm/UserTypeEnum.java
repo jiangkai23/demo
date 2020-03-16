@@ -1,6 +1,8 @@
 package com.xiamu.demo.jvm;
 
-
+/**
+ * @author XiaMu
+ */
 public enum UserTypeEnum {
     /**
      *
